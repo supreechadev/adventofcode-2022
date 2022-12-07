@@ -43,5 +43,4 @@ const getOnTopMoveAll = (stacks, input) => {
 };
 
 console.log(getOnTopMoveEach(getStacks(), puzzleInput));
-
 console.log(getOnTopMoveAll(getStacks(), puzzleInput));

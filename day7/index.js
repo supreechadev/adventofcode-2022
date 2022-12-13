@@ -27,17 +27,15 @@ const getDirTree = (input) => {
   const commands = input.split("\n");
   const root = new Dir("root");
   let currentDir = root;
-
   for (const command of commands) {
     const [a, b, c] = command.split(" ");
-
     switch (true) {
-      case a === "$" && b === "cd" && c !== ".." && c !== "/":
+      case b === "cd" && c !== ".." && c !== "/":
         const newDir = new Dir(c, currentDir);
         currentDir.addChild(newDir);
         currentDir = newDir;
         break;
-      case a === "$" && b === "cd" && c === "..":
+      case c === "..":
         currentDir = currentDir.parent;
         break;
       case !isNaN(+a):
@@ -59,8 +57,9 @@ const getDirSizeList = (dir) => {
 
 const getTotalDirSizes = (input) => {
   const dirTree = getDirTree(input);
-  const sizeList = getDirSizeList(dirTree);
-  return sizeList.filter((e) => e <= 100000).reduce((sum, e) => sum + e);
+  return getDirSizeList(dirTree)
+    .filter((e) => e <= 100000)
+    .reduce((sum, e) => sum + e);
 };
 
 const getDirToDelete = (input, needSpace) => {
@@ -74,11 +73,10 @@ const getDirToDelete = (input, needSpace) => {
     return "no need directory to delete";
   }
 
-  const sizeList = getDirSizeList(dirTree)
+  return getDirSizeList(dirTree)
     .filter((e) => e >= needSpace)
-    .sort((a, b) => b - a);
-
-  return sizeList.pop();
+    .sort((a, b) => b - a)
+    .pop();
 };
 
 console.log(getTotalDirSizes(puzzleInput));

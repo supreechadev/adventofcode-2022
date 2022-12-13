@@ -1,10 +1,11 @@
 const puzzleInput = require("./puzzle-input");
 
 const getMostCalory = (input) => {
-  return input
-    .split("\n\n")
-    .map((e) => e.split("\n").reduce((sum, e) => +sum + +e))
-    .sort((a, b) => b - a)[0];
+  return Math.max(
+    ...input
+      .split("\n\n")
+      .map((e) => e.split("\n").reduce((sum, e) => +sum + +e))
+  );
 };
 
 const getSumOfTop3Calories = (input) => {

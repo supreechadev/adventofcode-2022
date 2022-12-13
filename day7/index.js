@@ -1,5 +1,6 @@
 const puzzleInput = require("./puzzle-input");
 
+// Dir class
 function Dir(name, parent) {
   this.name = name;
   this.childs = [];
@@ -22,6 +23,15 @@ Dir.prototype.getSize = function () {
   }
   return totalChildSize + this.size;
 };
+
+Dir.prototype.getSizeList = function () {
+  let arr = [this.getSize()];
+  for (const child of this.childs) {
+    arr = [...arr, ...child.getSizeList()];
+  }
+  return arr;
+};
+// Dir class
 
 const getDirTree = (input) => {
   const commands = input.split("\n");
@@ -47,37 +57,24 @@ const getDirTree = (input) => {
   return root;
 };
 
-const getDirSizeList = (dir) => {
-  let arr = [dir.getSize()];
-  for (const child of dir.childs) {
-    arr = [...arr, ...getDirSizeList(child)];
-  }
-  return arr;
-};
-
 const getTotalDirSizes = (input) => {
-  const dirTree = getDirTree(input);
-  return getDirSizeList(dirTree)
+  const dir = getDirTree(input);
+  return dir
+    .getSizeList()
     .filter((e) => e <= 100000)
     .reduce((sum, e) => sum + e);
 };
 
-const getDirToDelete = (input, needSpace) => {
-  const totalSpace = 70000000;
-  const dirTree = getDirTree(input);
-  const totalUsed = dirTree.getSize();
-  const freeSpace = totalSpace - totalUsed;
-  needSpace = needSpace - freeSpace;
+const getDirToDelete = (input) => {
+  const dir = getDirTree(input);
+  const needSpace = 30000000 - (70000000 - dir.getSize());
 
-  if (needSpace < 0) {
-    return "no need directory to delete";
-  }
-
-  return getDirSizeList(dirTree)
+  return dir
+    .getSizeList()
     .filter((e) => e >= needSpace)
     .sort((a, b) => b - a)
     .pop();
 };
 
 console.log(getTotalDirSizes(puzzleInput));
-console.log(getDirToDelete(puzzleInput, 30000000));
+console.log(getDirToDelete(puzzleInput));

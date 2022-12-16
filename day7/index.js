@@ -69,11 +69,7 @@ const getDirToDelete = (input) => {
   const dir = getDirTree(input);
   const needSpace = 30000000 - (70000000 - dir.getSize());
 
-  return dir
-    .getSizeList()
-    .filter((e) => e >= needSpace)
-    .sort((a, b) => b - a)
-    .pop();
+  return Math.min(...dir.getSizeList().filter((e) => e >= needSpace));
 };
 
 console.log(getTotalDirSizes(puzzleInput));
